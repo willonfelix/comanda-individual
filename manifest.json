@@ -2,7 +2,7 @@
   "name": "Controle de Consumo",
   "short_name": "Consumo",
   "description": "Gerencie pedidos, quantidades e visualize o fechamento de contas.",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#f3f4f6",
   "theme_color": "#4f46e5",
