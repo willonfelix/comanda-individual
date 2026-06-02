@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes — Controle de Consumo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/qunitjs@2/qunit/qunit.min.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qunitjs@2/qunit/qunit.min.js"></script>
+    <script>
+        // === CÓDIGO FONTE (core isolado para teste) ===
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+        }
+
+        function validaItem(nome, preco, qtd) {
+            if (!nome || isNaN(preco) || preco <= 0 || isNaN(qtd) || qtd <= 0) return false;
+            return true;
+        }
+
+        function mergeItem(itens, nome, categoria, preco, qtd) {
+            const idx = itens.findIndex(item => item.nome.toLowerCase() === nome.toLowerCase() && item.categoria === categoria);
+            if (idx >= 0) {
+                itens[idx].qtd += qtd;
+                itens[idx].preco = preco;
+                return { acao: 'incrementado', item: itens[idx] };
+            }
+            const novo = { id: Date.now(), nome, categoria, preco, qtd };
+            itens.push(novo);
+            return { acao: 'criado', item: novo };
+        }
+
+        function removerItem(itens, id) {
+            return itens.filter(i => i.id !== id);
+        }
+
+        function alterarQtd(itens, id, delta) {
+            const item = itens.find(i => i.id === id);
+            if (!item) return null;
+            item.qtd += delta;
+            if (item.qtd <= 0) {
+                return { removido: true, item };
+            }
+            return { removido: false, item };
+        }
+
+        function calcularTotalizadores(itens) {
+            let totalQtd = 0;
+            let totalValor = 0;
+            itens.forEach(item => {
+                totalQtd += item.qtd;
+                totalValor += (item.preco * item.qtd);
+            });
+            return { totalQtd, totalValor, ticketMedio: totalQtd > 0 ? totalValor / totalQtd : 0 };
+        }
+
+        function calcularGrafico(itens) {
+            let comida = 0, bebida = 0;
+            itens.forEach(item => {
+                const sub = item.preco * item.qtd;
+                if (item.categoria === 'comida') comida += sub;
+                else bebida += sub;
+            });
+            return { comida, bebida };
+        }
+
+        function validarImportacao(dados) {
+            if (!Array.isArray(dados)) return { valido: false, erro: 'Formato deve ser um array' };
+            for (const item of dados) {
+                if (!item.nome || !item.categoria || typeof item.preco !== 'number' || typeof item.qtd !== 'number') {
+                    return { valido: false, erro: 'Itens devem conter nome, categoria, preco e qtd' };
+                }
+                if (item.categoria !== 'comida' && item.categoria !== 'bebida') {
+                    return { valido: false, erro: 'Categoria inválida: ' + item.categoria };
+                }
+            }
+            return { valido: true };
+        }
+
+        // === TESTES ===
+        QUnit.module('formatarMoeda');
+
+        QUnit.test('formata valor inteiro', function(assert) {
+            assert.equal(formatarMoeda(10), 'R$ 10,00');
+        });
+
+        QUnit.test('formata valor decimal', function(assert) {
+            assert.equal(formatarMoeda(10.5), 'R$ 10,50');
+        });
+
+        QUnit.test('formata zero', function(assert) {
+            assert.equal(formatarMoeda(0), 'R$ 0,00');
+        });
+
+        QUnit.test('formata valor grande', function(assert) {
+            assert.equal(formatarMoeda(1234.56), 'R$ 1.234,56');
+        });
+
+        QUnit.module('validaItem');
+
+        QUnit.test('dados válidos', function(assert) {
+            assert.true(validaItem('Coca', 5, 2));
+            assert.true(validaItem('X-Burguer', 25.90, 1));
+        });
+
+        QUnit.test('nome vazio', function(assert) {
+            assert.false(validaItem('', 5, 1));
+        });
+
+        QUnit.test('preço zero', function(assert) {
+            assert.false(validaItem('Item', 0, 1));
+        });
+
+        QUnit.test('preço negativo', function(assert) {
+            assert.false(validaItem('Item', -1, 1));
+        });
+
+        QUnit.test('quantidade zero', function(assert) {
+            assert.false(validaItem('Item', 5, 0));
+        });
+
+        QUnit.module('mergeItem');
+
+        QUnit.test('adiciona item novo', function(assert) {
+            const itens = [];
+            const r = mergeItem(itens, 'Coca', 'bebida', 6, 2);
+            assert.equal(r.acao, 'criado');
+            assert.equal(itens.length, 1);
+            assert.equal(itens[0].nome, 'Coca');
+            assert.equal(itens[0].qtd, 2);
+        });
+
+        QUnit.test('incrementa item existente (mesmo nome e categoria)', function(assert) {
+            const itens = [{ id: 1, nome: 'Coca', categoria: 'bebida', preco: 6, qtd: 2 }];
+            const r = mergeItem(itens, 'Coca', 'bebida', 7, 3);
+            assert.equal(r.acao, 'incrementado');
+            assert.equal(itens.length, 1);
+            assert.equal(itens[0].qtd, 5);
+            assert.equal(itens[0].preco, 7);
+        });
+
+        QUnit.test('mesmo nome, categoria diferente = cria novo', function(assert) {
+            const itens = [{ id: 1, nome: 'Coca', categoria: 'bebida', preco: 6, qtd: 2 }];
+            mergeItem(itens, 'Coca', 'comida', 8, 1);
+            assert.equal(itens.length, 2);
+        });
+
+        QUnit.module('removerItem');
+
+        QUnit.test('remove item por id', function(assert) {
+            const itens = [{ id: 1, nome: 'A' }, { id: 2, nome: 'B' }];
+            const r = removerItem(itens, 1);
+            assert.equal(r.length, 1);
+            assert.equal(r[0].nome, 'B');
+        });
+
+        QUnit.module('alterarQtd');
+
+        QUnit.test('incrementa quantidade', function(assert) {
+            const itens = [{ id: 1, nome: 'A', qtd: 2 }];
+            const r = alterarQtd(itens, 1, 1);
+            assert.equal(r.removido, false);
+            assert.equal(itens[0].qtd, 3);
+        });
+
+        QUnit.test('decrementa e remove quando chega a 0', function(assert) {
+            const itens = [{ id: 1, nome: 'A', qtd: 1 }];
+            const r = alterarQtd(itens, 1, -1);
+            assert.equal(r.removido, true);
+        });
+
+        QUnit.test('id inexistente retorna null', function(assert) {
+            const itens = [{ id: 1, nome: 'A' }];
+            const r = alterarQtd(itens, 999, 1);
+            assert.equal(r, null);
+        });
+
+        QUnit.module('calcularTotalizadores');
+
+        QUnit.test('itens vazio', function(assert) {
+            const r = calcularTotalizadores([]);
+            assert.equal(r.totalQtd, 0);
+            assert.equal(r.totalValor, 0);
+            assert.equal(r.ticketMedio, 0);
+        });
+
+        QUnit.test('múltiplos itens', function(assert) {
+            const itens = [
+                { preco: 10, qtd: 2 },
+                { preco: 5, qtd: 3 }
+            ];
+            const r = calcularTotalizadores(itens);
+            assert.equal(r.totalQtd, 5);
+            assert.equal(r.totalValor, 35);
+            assert.equal(r.ticketMedio, 7);
+        });
+
+        QUnit.module('calcularGrafico');
+
+        QUnit.test('distribuição correta', function(assert) {
+            const itens = [
+                { preco: 10, qtd: 2, categoria: 'comida' },
+                { preco: 5, qtd: 3, categoria: 'bebida' }
+            ];
+            const r = calcularGrafico(itens);
+            assert.equal(r.comida, 20);
+            assert.equal(r.bebida, 15);
+        });
+
+        QUnit.test('apenas comida', function(assert) {
+            const itens = [{ preco: 10, qtd: 1, categoria: 'comida' }];
+            const r = calcularGrafico(itens);
+            assert.equal(r.comida, 10);
+            assert.equal(r.bebida, 0);
+        });
+
+        QUnit.module('validarImportacao');
+
+        QUnit.test('dados válidos', function(assert) {
+            const dados = [{ nome: 'Coca', categoria: 'bebida', preco: 6, qtd: 2 }];
+            const r = validarImportacao(dados);
+            assert.true(r.valido);
+        });
+
+        QUnit.test('não é array', function(assert) {
+            const r = validarImportacao({});
+            assert.false(r.valido);
+        });
+
+        QUnit.test('campo faltando', function(assert) {
+            const dados = [{ nome: 'Coca', preco: 6, qtd: 2 }];
+            const r = validarImportacao(dados);
+            assert.false(r.valido);
+        });
+
+        QUnit.test('categoria inválida', function(assert) {
+            const dados = [{ nome: 'Coca', categoria: 'lanche', preco: 6, qtd: 2 }];
+            const r = validarImportacao(dados);
+            assert.false(r.valido);
+        });
+
+        QUnit.test('preco não é número', function(assert) {
+            const dados = [{ nome: 'Coca', categoria: 'bebida', preco: '6', qtd: 2 }];
+            const r = validarImportacao(dados);
+            assert.false(r.valido);
+        });
+    </script>
+</body>
+</html>

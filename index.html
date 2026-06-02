@@ -20,6 +20,76 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tema escuro */
+        [data-theme="dark"] body { background-color: #0f172a !important; color: #e2e8f0 !important; }
+        [data-theme="dark"] .bg-white { background-color: #1e293b !important; }
+        [data-theme="dark"] .bg-gray-100 { background-color: #0f172a !important; }
+        [data-theme="dark"] .bg-gray-50 { background-color: #1e293b !important; }
+        [data-theme="dark"] .bg-gray-200 { background-color: #334155 !important; }
+        [data-theme="dark"] .border-gray-300 { border-color: #475569 !important; }
+        [data-theme="dark"] .border-gray-100 { border-color: #334155 !important; }
+        [data-theme="dark"] .divide-gray-100 > * + * { border-color: #334155 !important; }
+        [data-theme="dark"] .text-gray-800 { color: #f1f5f9 !important; }
+        [data-theme="dark"] .text-gray-700 { color: #e2e8f0 !important; }
+        [data-theme="dark"] .text-gray-600 { color: #94a3b8 !important; }
+        [data-theme="dark"] .text-gray-500 { color: #64748b !important; }
+        [data-theme="dark"] .text-gray-400 { color: #475569 !important; }
+        [data-theme="dark"] .text-gray-300 { color: #334155 !important; }
+        [data-theme="dark"] .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; }
+        [data-theme="dark"] .shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.4) !important; }
+        [data-theme="dark"] .hover\:bg-gray-50:hover { background-color: #334155 !important; }
+        [data-theme="dark"] .hover\:bg-gray-200:hover { background-color: #475569 !important; }
+        [data-theme="dark"] .hover\:bg-gray-300:hover { background-color: #475569 !important; }
+        [data-theme="dark"] .bg-indigo-100 { background-color: #1e1b4b !important; }
+        [data-theme="dark"] .text-indigo-600 { color: #818cf8 !important; }
+        [data-theme="dark"] .text-indigo-700 { color: #a5b4fc !important; }
+        [data-theme="dark"] .bg-green-100 { background-color: #064e3b !important; }
+        [data-theme="dark"] .text-green-600 { color: #34d399 !important; }
+        [data-theme="dark"] .bg-purple-100 { background-color: #2e1065 !important; }
+        [data-theme="dark"] .text-purple-600 { color: #a78bfa !important; }
+        [data-theme="dark"] .bg-red-100 { background-color: #450a0a !important; }
+        [data-theme="dark"] .text-red-600 { color: #f87171 !important; }
+        [data-theme="dark"] .bg-blue-100 { background-color: #1e3a5f !important; }
+        [data-theme="dark"] .text-blue-700 { color: #93c5fd !important; }
+        [data-theme="dark"] .bg-orange-100 { background-color: #431407 !important; }
+        [data-theme="dark"] .text-orange-700 { color: #fdba74 !important; }
+        [data-theme="dark"] .bg-indigo-600 { background-color: #4f46e5 !important; }
+        [data-theme="dark"] .hover\:bg-indigo-700:hover { background-color: #4338ca !important; }
+        [data-theme="dark"] .bg-green-100 { background-color: #064e3b !important; }
+        [data-theme="dark"] .bg-blue-100 { background-color: #1e3a5f !important; }
+        [data-theme="dark"] .bg-green-200 { background-color: #065f46 !important; }
+        [data-theme="dark"] .bg-blue-200 { background-color: #1e40af !important; }
+        [data-theme="dark"] .bg-purple-200 { background-color: #4c1d95 !important; }
+        [data-theme="dark"] .bg-red-200 { background-color: #7f1d1d !important; }
+        [data-theme="dark"] input, [data-theme="dark"] select { background-color: #334155 !important; color: #e2e8f0 !important; border-color: #475569 !important; }
+        [data-theme="dark"] option { background-color: #1e293b !important; }
+
+        /* Estilo para impressão / PDF */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; font-size: 12pt; color: black !important; }
+            .max-w-5xl { max-width: 100% !important; margin: 0 !important; padding: 0.5in !important; }
+            .shadow-sm, .shadow-md { box-shadow: none !important; }
+            .border-l-4 { border-left: none !important; }
+            .bg-white { background: white !important; }
+            .text-gray-800, .text-gray-700, .text-gray-600, .text-gray-500 { color: black !important; }
+            .text-green-600 { color: #059669 !important; }
+            .text-indigo-700 { color: #4338ca !important; }
+            .text-purple-600 { color: #7c3aed !important; }
+            #tabelaConsumo tr { page-break-inside: avoid; }
+        }
+        .print-only { display: none; }
+
+        /* Histórico modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 50; }
+        .modal-content { background: white; border-radius: 1rem; padding: 1.5rem; max-width: 42rem; width: 90%; max-height: 80vh; overflow-y: auto; }
+        [data-theme="dark"] .modal-content { background: #1e293b; }
+        [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.7); }
+
+        /* Input de edição inline */
+        .edit-input { border: 1px solid #6366f1; border-radius: 0.375rem; padding: 0.25rem 0.5rem; font-size: inherit; width: 100%; box-sizing: border-box; background: transparent; color: inherit; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen">
@@ -27,21 +97,46 @@
     <div class="max-w-5xl mx-auto p-4 md:p-6">
         
         <!-- Cabeçalho -->
-        <header class="mb-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-indigo-700"><i class="fas fa-receipt mr-2"></i>Controle de Consumo</h1>
-                <p class="text-gray-500 text-sm mt-1">Gerencie pedidos, quantidades e visualize o fechamento.</p>
-            </div>
-            <div class="mt-4 md:mt-0 flex gap-2">
-                <button onclick="exportarDados()" class="bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition text-sm font-semibold">
-                    <i class="fas fa-download mr-1"></i> Exportar
+        <header class="mb-6 text-center md:text-left flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div>
+                    <h1 class="text-3xl font-bold text-indigo-700"><i class="fas fa-receipt mr-2"></i>Controle de Consumo</h1>
+                    <p class="text-gray-500 text-sm mt-1">Gerencie pedidos, quantidades e visualize o fechamento.</p>
+                </div>
+                <button id="btnTema" onclick="toggleTema()" class="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition text-sm no-print" title="Alternar tema">
+                    <i id="iconeTema" class="fas fa-moon"></i>
                 </button>
-                <button onclick="document.getElementById('inputImportar').click()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition text-sm font-semibold">
-                    <i class="fas fa-upload mr-1"></i> Importar
+            </div>
+            <div class="flex flex-wrap gap-2 items-center">
+                <div class="flex items-center gap-1 bg-white rounded-lg border border-gray-300 px-2 py-1.5 text-sm">
+                    <i class="fas fa-chair text-gray-500 mr-1"></i>
+                    <select id="selectMesa" onchange="mudarMesa(this.value)" class="border-0 bg-transparent text-sm font-medium focus:outline-none">
+                    </select>
+                    <button onclick="adicionarMesa()" class="ml-1 text-indigo-600 hover:text-indigo-800 transition" title="Nova mesa">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                    <button onclick="renomearMesa()" class="text-gray-400 hover:text-gray-600 transition" title="Renomear mesa">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+                <button onclick="exportarPDF()" class="bg-green-100 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-200 transition text-sm font-semibold no-print" title="Exportar PDF">
+                    <i class="fas fa-file-pdf mr-1"></i> PDF
+                </button>
+                <button onclick="compartilharWhatsApp()" class="bg-emerald-100 text-emerald-600 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition text-sm font-semibold no-print" title="Compartilhar via WhatsApp">
+                    <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                </button>
+                <button onclick="exportarDados()" class="bg-green-100 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-200 transition text-sm font-semibold no-print">
+                    <i class="fas fa-download mr-1"></i> JSON
+                </button>
+                <button onclick="document.getElementById('inputImportar').click()" class="bg-blue-100 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-200 transition text-sm font-semibold no-print">
+                    <i class="fas fa-upload mr-1"></i> JSON
                 </button>
                 <input type="file" id="inputImportar" accept=".json" class="hidden" onchange="importarDados(event)">
-                <button onclick="limparTudo()" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition text-sm font-semibold">
-                    <i class="fas fa-trash-alt mr-1"></i> Zerar Conta
+                <button onclick="abrirHistorico()" class="bg-purple-100 text-purple-600 px-3 py-1.5 rounded-lg hover:bg-purple-200 transition text-sm font-semibold no-print" title="Histórico de contas">
+                    <i class="fas fa-history mr-1"></i>
+                </button>
+                <button onclick="limparTudo()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-200 transition text-sm font-semibold no-print">
+                    <i class="fas fa-trash-alt mr-1"></i> Zerar
                 </button>
             </div>
         </header>
@@ -96,7 +191,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1">Preço Unit. (R$)</label>
-                                <input type="number" id="inputPreco" step="0.01" min="0" placeholder="0.00" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <input type="text" id="inputPreco" placeholder="0,00" oninput="mascaraPreco(this)" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
                         </div>
 
@@ -160,15 +255,149 @@
         </div>
     </div>
 
+    <div id="printSection" class="print-only max-w-5xl mx-auto p-4 md:p-6">
+        <h1 class="text-2xl font-bold text-center mb-4">Controle de Consumo</h1>
+        <p class="text-center text-gray-500 mb-6" id="printHeaderMesa">Mesa</p>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-gray-300 text-xs uppercase">
+                    <th class="p-2">Item</th>
+                    <th class="p-2">Categoria</th>
+                    <th class="p-2 text-right">Preço Unit.</th>
+                    <th class="p-2 text-center">Qtd</th>
+                    <th class="p-2 text-right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="printBody"></tbody>
+        </table>
+        <div class="mt-4 text-right font-bold text-lg" id="printTotal"></div>
+    </div>
+
+    <div id="modalHistorico" class="modal-overlay hidden no-print" onclick="if(event.target===this)fecharHistorico()">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold"><i class="fas fa-history mr-2 text-indigo-600"></i>Histórico de Contas</h2>
+                <button onclick="fecharHistorico()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+            <div id="corpoHistorico">
+                <p class="text-gray-400 text-center py-8">Nenhuma conta fechada ainda.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- ESTADO DA APLICAÇÃO ---
-        let itens = JSON.parse(localStorage.getItem('consumoItens')) || [];
+        const APP_KEY = 'consumoApp';
+        const OLD_KEY = 'consumoItens';
+        let estadoApp = JSON.parse(localStorage.getItem(APP_KEY));
+        if (!estadoApp) {
+            const oldData = JSON.parse(localStorage.getItem(OLD_KEY)) || [];
+            estadoApp = {
+                mesas: { 'Mesa 1': oldData },
+                mesaAtual: 'Mesa 1',
+                historico: [],
+                tema: localStorage.getItem('consumoTema') || 'light'
+            };
+            localStorage.setItem(APP_KEY, JSON.stringify(estadoApp));
+            localStorage.removeItem(OLD_KEY);
+            localStorage.removeItem('consumoTema');
+        }
+        let itens = estadoApp.mesas[estadoApp.mesaAtual] || [];
         let chartInstance = null;
+        let editandoId = null;
+
+        // --- TEMA ESCURO ---
+        function aplicarTema(tema) {
+            document.documentElement.setAttribute('data-theme', tema);
+            estadoApp.tema = tema;
+            localStorage.setItem(APP_KEY, JSON.stringify(estadoApp));
+            const icone = document.getElementById('iconeTema');
+            icone.className = tema === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleTema() {
+            const novoTema = estadoApp.tema === 'dark' ? 'light' : 'dark';
+            aplicarTema(novoTema);
+        }
+
+        // --- MÚLTIPLAS MESAS ---
+        function atualizarSelectMesas() {
+            const select = document.getElementById('selectMesa');
+            select.innerHTML = '';
+            Object.keys(estadoApp.mesas).forEach(nome => {
+                const opt = document.createElement('option');
+                opt.value = nome;
+                opt.textContent = nome;
+                if (nome === estadoApp.mesaAtual) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function mudarMesa(nome) {
+            estadoApp.mesas[estadoApp.mesaAtual] = itens;
+            estadoApp.mesaAtual = nome;
+            if (!estadoApp.mesas[nome]) estadoApp.mesas[nome] = [];
+            itens = estadoApp.mesas[nome];
+            salvarERenderizar();
+            atualizarSelectMesas();
+        }
+
+        function adicionarMesa() {
+            const nome = prompt('Nome da nova mesa:', `Mesa ${Object.keys(estadoApp.mesas).length + 1}`);
+            if (!nome || nome.trim() === '') return;
+            const nomeLimpo = nome.trim();
+            if (estadoApp.mesas[nomeLimpo]) {
+                alert('Já existe uma mesa com este nome.');
+                return;
+            }
+            estadoApp.mesas[nomeLimpo] = [];
+            mudarMesa(nomeLimpo);
+        }
+
+        function renomearMesa() {
+            const nomes = Object.keys(estadoApp.mesas);
+            if (nomes.length === 1 && nomes[0] === 'Mesa 1' && estadoApp.mesas['Mesa 1'].length === 0) {
+                const novo = prompt('Novo nome para a mesa:', estadoApp.mesaAtual);
+                if (!novo || novo.trim() === '') return;
+                const n = novo.trim();
+                if (n !== estadoApp.mesaAtual && estadoApp.mesas[n]) {
+                    alert('Já existe uma mesa com este nome.');
+                    return;
+                }
+                estadoApp.mesas[n] = estadoApp.mesas[estadoApp.mesaAtual];
+                delete estadoApp.mesas[estadoApp.mesaAtual];
+                estadoApp.mesaAtual = n;
+                atualizarSelectMesas();
+                salvarERenderizar();
+                return;
+            }
+            const novo = prompt('Novo nome para a mesa atual:', estadoApp.mesaAtual);
+            if (!novo || novo.trim() === '' || novo.trim() === estadoApp.mesaAtual) return;
+            const n = novo.trim();
+            if (estadoApp.mesas[n]) {
+                alert('Já existe uma mesa com este nome.');
+                return;
+            }
+            estadoApp.mesas[n] = estadoApp.mesas[estadoApp.mesaAtual];
+            delete estadoApp.mesas[estadoApp.mesaAtual];
+            estadoApp.mesaAtual = n;
+            itens = estadoApp.mesas[n];
+            atualizarSelectMesas();
+            salvarERenderizar();
+        }
 
         // --- FUNÇÕES DE FORMATAÇÃO ---
         const formatarMoeda = (valor) => {
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
         };
+
+        // --- MÁSCARA MONETÁRIA ---
+        function mascaraPreco(input) {
+            let valor = input.value.replace(/\D/g, '');
+            if (valor === '') { input.value = ''; return; }
+            valor = (parseInt(valor) / 100).toFixed(2);
+            input.value = valor;
+        }
 
         // --- LÓGICA PRINCIPAL ---
         function adicionarItem() {
@@ -182,13 +411,11 @@
                 return;
             }
 
-            // Verifica se o item já existe (mesmo nome e mesma categoria) para incrementar
             const itemExistente = itens.find(item => item.nome.toLowerCase() === nome.toLowerCase() && item.categoria === categoria);
 
             if (itemExistente) {
                 itemExistente.qtd += qtd;
-                // Opcional: atualizar o preço caso tenha mudado, ou manter o original. Vamos manter o original ou atualizar? Vamos atualizar para o mais recente.
-                itemExistente.preco = preco; 
+                itemExistente.preco = preco;
             } else {
                 itens.push({
                     id: Date.now(),
@@ -211,7 +438,7 @@
                     if(confirm(`Remover "${item.nome}" da conta?`)) {
                         itens = itens.filter(i => i.id !== id);
                     } else {
-                        item.qtd = 1; // Reseta para 1 se o usuário cancelar a exclusão
+                        item.qtd = 1;
                     }
                 }
                 salvarERenderizar();
@@ -228,16 +455,51 @@
         function limparTudo() {
             if(itens.length === 0) return;
             if(confirm("ATENÇÃO: Isso apagará TODA a conta atual. Deseja continuar?")) {
+                salvarHistorico();
                 itens = [];
                 salvarERenderizar();
             }
         }
 
         function salvarERenderizar() {
-            localStorage.setItem('consumoItens', JSON.stringify(itens));
+            estadoApp.mesas[estadoApp.mesaAtual] = itens;
+            localStorage.setItem(APP_KEY, JSON.stringify(estadoApp));
             renderizarTabela();
             atualizarTotalizadores();
             atualizarGrafico();
+            atualizarSelectMesas();
+        }
+
+        // --- EDIÇÃO INLINE ---
+        function editarCampo(id, campo, valorAtual) {
+            editandoId = id;
+            const item = itens.find(i => i.id === id);
+            if (!item) return;
+            const td = document.querySelector(`#item-${id} .${campo}-cell`);
+            if (!td) return;
+
+            if (campo === 'preco') {
+                td.innerHTML = `<input type="text" class="edit-input text-right" value="${item.preco.toFixed(2)}" onblur="salvarEdicao(${id},'${campo}',this)" onkeypress="if(event.key==='Enter')this.blur()" autofocus>`;
+            } else {
+                td.innerHTML = `<input type="text" class="edit-input" value="${item.nome}" onblur="salvarEdicao(${id},'${campo}',this)" onkeypress="if(event.key==='Enter')this.blur()" autofocus>`;
+            }
+            td.querySelector('input').focus();
+        }
+
+        function salvarEdicao(id, campo, input) {
+            if (editandoId !== id) return;
+            editandoId = null;
+            const item = itens.find(i => i.id === id);
+            if (!item) return;
+
+            const valor = input.value.trim();
+            if (campo === 'nome') {
+                if (valor) item.nome = valor;
+            } else if (campo === 'preco') {
+                const preco = parseFloat(valor.replace(',', '.'));
+                if (!isNaN(preco) && preco > 0) item.preco = preco;
+            }
+            salvarERenderizar();
         }
 
         // --- RENDERIZAÇÃO DA UI ---
@@ -258,21 +520,26 @@
 
             itens.forEach(item => {
                 const subtotal = item.preco * item.qtd;
-                const corCategoria = item.categoria === 'bebida' 
-                    ? 'bg-blue-100 text-blue-700' 
+                const corCategoria = item.categoria === 'bebida'
+                    ? 'bg-blue-100 text-blue-700'
                     : 'bg-orange-100 text-orange-700';
                 const iconeCategoria = item.categoria === 'bebida' ? 'fa-wine-glass' : 'fa-utensils';
 
                 const tr = document.createElement('tr');
+                tr.id = `item-${item.id}`;
                 tr.className = 'hover:bg-gray-50 transition fade-in';
                 tr.innerHTML = `
-                    <td class="p-4 font-medium text-gray-800">${item.nome}</td>
+                    <td class="p-4 font-medium text-gray-800 nome-cell">
+                        <span class="cursor-pointer hover:text-indigo-600 hover:underline" onclick="editarCampo(${item.id},'nome')" title="Clique para editar">${item.nome}</span>
+                    </td>
                     <td class="p-4">
                         <span class="px-2 py-1 rounded-full text-xs font-bold capitalize ${corCategoria}">
                             <i class="fas ${iconeCategoria} mr-1"></i> ${item.categoria}
                         </span>
                     </td>
-                    <td class="p-4 text-right text-gray-600">${formatarMoeda(item.preco)}</td>
+                    <td class="p-4 text-right text-gray-600 preco-cell">
+                        <span class="cursor-pointer hover:text-indigo-600 hover:underline" onclick="editarCampo(${item.id},'preco')" title="Clique para editar">${formatarMoeda(item.preco)}</span>
+                    </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center space-x-2">
                             <button onclick="alterarQuantidade(${item.id}, -1)" class="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center justify-center text-xs font-bold transition">-</button>
@@ -302,7 +569,7 @@
 
             document.getElementById('totalQtd').textContent = totalQtd;
             document.getElementById('totalValor').textContent = formatarMoeda(totalValor);
-            
+
             const ticketMedio = totalQtd > 0 ? (totalValor / totalQtd) : 0;
             document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
         }
@@ -326,9 +593,8 @@
                 chartInstance.destroy();
             }
 
-            // Se não houver dados, mostra um gráfico vazio/cinza
             const dados = (valorComida === 0 && valorBebida === 0) ? [1] : [valorComida, valorBebida];
-            const cores = (valorComida === 0 && valorBebida === 0) ? ['#e5e7eb'] : ['#f97316', '#3b82f6']; // Laranja (Comida), Azul (Bebida)
+            const cores = (valorComida === 0 && valorBebida === 0) ? ['#e5e7eb'] : ['#f97316', '#3b82f6'];
             const labels = (valorComida === 0 && valorBebida === 0) ? ['Sem dados'] : ['Comidas', 'Bebidas'];
 
             chartInstance = new Chart(ctx, {
@@ -366,12 +632,12 @@
                             }
                         }
                     },
-                    cutout: '70%' // Deixa o gráfico mais fino e moderno
+                    cutout: '70%'
                 }
             });
         }
 
-        // --- EXPORTAR / IMPORTAR ---
+        // --- EXPORTAR / IMPORTAR JSON ---
         function exportarDados() {
             if (itens.length === 0) {
                 alert("Não há dados para exportar.");
@@ -382,7 +648,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `consumo-${new Date().toISOString().slice(0, 10)}.json`;
+            a.download = `consumo-${estadoApp.mesaAtual.replace(/\s+/g, '-')}-${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -419,6 +685,144 @@
             event.target.value = '';
         }
 
+        // --- PDF ---
+        function exportarPDF() {
+            const printBody = document.getElementById('printBody');
+            const printTotal = document.getElementById('printTotal');
+            const printHeader = document.getElementById('printHeaderMesa');
+
+            printBody.innerHTML = '';
+            if (itens.length === 0) {
+                alert("Não há itens para exportar.");
+                return;
+            }
+
+            let total = 0;
+            itens.forEach(item => {
+                const subtotal = item.preco * item.qtd;
+                total += subtotal;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2">${item.nome}</td>
+                    <td class="p-2 capitalize">${item.categoria}</td>
+                    <td class="p-2 text-right">${formatarMoeda(item.preco)}</td>
+                    <td class="p-2 text-center">${item.qtd}</td>
+                    <td class="p-2 text-right">${formatarMoeda(subtotal)}</td>
+                `;
+                printBody.appendChild(tr);
+            });
+
+            printHeader.textContent = `Mesa: ${estadoApp.mesaAtual}`;
+            printTotal.textContent = `Total: ${formatarMoeda(total)}`;
+            window.print();
+        }
+
+        // --- WHATSAPP ---
+        function compartilharWhatsApp() {
+            if (itens.length === 0) {
+                alert("Não há itens para compartilhar.");
+                return;
+            }
+
+            let texto = `*Controle de Consumo - ${estadoApp.mesaAtual}*\n\n`;
+            let total = 0;
+
+            itens.forEach(item => {
+                const subtotal = item.preco * item.qtd;
+                total += subtotal;
+                texto += `${item.nome} (${item.categoria}) - ${item.qtd}x ${formatarMoeda(item.preco)} = ${formatarMoeda(subtotal)}\n`;
+            });
+
+            texto += `\n*Total: ${formatarMoeda(total)}*\n`;
+            texto += `\n_Total de itens: ${itens.reduce((s, i) => s + i.qtd, 0)}_`;
+
+            const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- HISTÓRICO ---
+        function salvarHistorico() {
+            if (itens.length === 0) return;
+            const entrada = {
+                data: new Date().toISOString(),
+                mesa: estadoApp.mesaAtual,
+                itens: JSON.parse(JSON.stringify(itens)),
+                total: itens.reduce((s, i) => s + i.preco * i.qtd, 0),
+                qtdItens: itens.reduce((s, i) => s + i.qtd, 0)
+            };
+            if (!estadoApp.historico) estadoApp.historico = [];
+            estadoApp.historico.unshift(entrada);
+            if (estadoApp.historico.length > 50) estadoApp.historico.length = 50;
+            localStorage.setItem(APP_KEY, JSON.stringify(estadoApp));
+        }
+
+        function abrirHistorico() {
+            const modal = document.getElementById('modalHistorico');
+            const corpo = document.getElementById('corpoHistorico');
+            modal.classList.remove('hidden');
+
+            const hist = estadoApp.historico || [];
+            if (hist.length === 0) {
+                corpo.innerHTML = '<p class="text-gray-400 text-center py-8">Nenhuma conta fechada ainda.</p>';
+                return;
+            }
+
+            let html = '';
+            hist.forEach((h, idx) => {
+                const data = new Date(h.data);
+                const dataStr = data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                html += `
+                    <div class="border-b border-gray-200 pb-3 mb-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <strong>${h.mesa}</strong>
+                                <span class="text-xs text-gray-400 ml-2">${dataStr}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-green-600">${formatarMoeda(h.total)}</span>
+                                <span class="text-xs text-gray-400 ml-1">(${h.qtdItens} itens)</span>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            ${h.itens.map(i => `${i.nome} (${i.qtd}x ${formatarMoeda(i.preco)})`).join(', ')}
+                        </div>
+                        <button onclick="restaurarHistorico(${idx})" class="text-xs text-indigo-600 hover:text-indigo-800 mt-1">
+                            <i class="fas fa-redo mr-1"></i>Restaurar
+                        </button>
+                        <button onclick="excluirHistorico(${idx})" class="text-xs text-red-400 hover:text-red-600 ml-3">
+                            <i class="fas fa-trash mr-1"></i>Excluir
+                        </button>
+                    </div>
+                `;
+            });
+            corpo.innerHTML = html;
+        }
+
+        function fecharHistorico() {
+            document.getElementById('modalHistorico').classList.add('hidden');
+        }
+
+        function restaurarHistorico(idx) {
+            if (!confirm("Restaurar esta conta? Os dados atuais serão substituídos.")) return;
+            const h = estadoApp.historico[idx];
+            if (!h) return;
+            if (!estadoApp.mesas[h.mesa]) {
+                estadoApp.mesas[h.mesa] = [];
+            }
+            estadoApp.mesaAtual = h.mesa;
+            estadoApp.mesas[h.mesa] = JSON.parse(JSON.stringify(h.itens));
+            itens = estadoApp.mesas[h.mesa];
+            fecharHistorico();
+            salvarERenderizar();
+        }
+
+        function excluirHistorico(idx) {
+            if (!confirm("Excluir esta entrada do histórico?")) return;
+            estadoApp.historico.splice(idx, 1);
+            localStorage.setItem(APP_KEY, JSON.stringify(estadoApp));
+            abrirHistorico();
+        }
+
         // --- UTILITÁRIOS ---
         function ajustarQtdInput(valor) {
             const input = document.getElementById('inputQtd');
@@ -436,10 +840,11 @@
 
         // --- INICIALIZAÇÃO ---
         window.onload = function() {
+            aplicarTema(estadoApp.tema || 'light');
+            atualizarSelectMesas();
             salvarERenderizar();
         };
 
-        // Permitir adicionar apertando Enter no formulário
         document.addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && (e.target.id === 'inputNome' || e.target.id === 'inputPreco' || e.target.id === 'inputQtd')) {
                 adicionarItem();
@@ -448,7 +853,6 @@
     </script>
 
 <script>
-  // Registro do Service Worker para funcionalidade Offline/PWA
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js')
