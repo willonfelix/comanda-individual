@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Consumo - Estabelecimento</title>
+    
+    <!-- Tailwind CSS para estilização rápida e bonita -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para os gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="theme-color" content="#4f46e5">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+    <div class="max-w-5xl mx-auto p-4 md:p-6">
+        
+        <!-- Cabeçalho -->
+        <header class="mb-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-indigo-700"><i class="fas fa-receipt mr-2"></i>Controle de Consumo</h1>
+                <p class="text-gray-500 text-sm mt-1">Gerencie pedidos, quantidades e visualize o fechamento.</p>
+            </div>
+            <button onclick="limparTudo()" class="mt-4 md:mt-0 bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition text-sm font-semibold">
+                <i class="fas fa-trash-alt mr-1"></i> Zerar Conta
+            </button>
+        </header>
+
+        <!-- Totalizadores -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-indigo-500 flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-xs font-bold uppercase">Total de Itens</p>
+                    <p class="text-2xl font-bold text-gray-800" id="totalQtd">0</p>
+                </div>
+                <div class="bg-indigo-100 p-3 rounded-full text-indigo-600"><i class="fas fa-cubes text-xl"></i></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-xs font-bold uppercase">Valor Total da Conta</p>
+                    <p class="text-3xl font-bold text-green-600" id="totalValor">R$ 0,00</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full text-green-600"><i class="fas fa-dollar-sign text-xl"></i></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-xs font-bold uppercase">Ticket Médio por Item</p>
+                    <p class="text-2xl font-bold text-purple-600" id="ticketMedio">R$ 0,00</p>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-full text-purple-600"><i class="fas fa-chart-line text-xl"></i></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Coluna da Esquerda: Formulário e Gráfico -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Formulário de Adição -->
+                <div class="bg-white p-5 rounded-xl shadow-md">
+                    <h2 class="text-lg font-bold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-plus-circle mr-2 text-indigo-600"></i>Adicionar Consumo</h2>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Nome do Item</label>
+                            <input type="text" id="inputNome" placeholder="Ex: Coca-Cola, X-Burguer" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Categoria</label>
+                                <select id="inputCategoria" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                                    <option value="bebida">🍹 Bebida</option>
+                                    <option value="comida">🍔 Comida</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">Preço Unit. (R$)</label>
+                                <input type="number" id="inputPreco" step="0.01" min="0" placeholder="0.00" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Quantidade</label>
+                            <div class="flex items-center">
+                                <button onclick="ajustarQtdInput(-1)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-l-lg border border-r-0 border-gray-300">-</button>
+                                <input type="number" id="inputQtd" value="1" min="1" class="w-full p-2 border border-gray-300 text-center focus:outline-none">
+                                <button onclick="ajustarQtdInput(1)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-r-lg border border-l-0 border-gray-300">+</button>
+                            </div>
+                        </div>
+
+                        <button onclick="adicionarItem()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition mt-2 shadow-md">
+                            Adicionar à Conta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="bg-white p-5 rounded-xl shadow-md">
+                    <h2 class="text-lg font-bold mb-4 text-gray-700 border-b pb-2"><i class="fas fa-chart-pie mr-2 text-indigo-600"></i>Distribuição do Consumo</h2>
+                    <div class="relative h-64">
+                        <canvas id="consumoChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-3">* Baseado no valor total gasto por categoria</p>
+                </div>
+            </div>
+
+            <!-- Coluna da Direita: Lista de Itens -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-gray-700"><i class="fas fa-list mr-2 text-indigo-600"></i>Itens Consumidos</h2>
+                        <span class="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full" id="contadorItensUnicos">0 itens únicos</span>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
+                                    <th class="p-4 font-semibold">Item</th>
+                                    <th class="p-4 font-semibold">Categoria</th>
+                                    <th class="p-4 font-semibold text-right">Preço Unit.</th>
+                                    <th class="p-4 font-semibold text-center">Qtd</th>
+                                    <th class="p-4 font-semibold text-right">Subtotal</th>
+                                    <th class="p-4 font-semibold text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaConsumo" class="text-sm divide-y divide-gray-100">
+                                <!-- Itens serão inseridos aqui via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="mensagemVazia" class="p-8 text-center text-gray-400 hidden">
+                        <i class="fas fa-shopping-basket text-4xl mb-3 text-gray-300"></i>
+                        <p>Nenhum item adicionado ainda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ESTADO DA APLICAÇÃO ---
+        let itens = JSON.parse(localStorage.getItem('consumoItens')) || [];
+        let chartInstance = null;
+
+        // --- FUNÇÕES DE FORMATAÇÃO ---
+        const formatarMoeda = (valor) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+        };
+
+        // --- LÓGICA PRINCIPAL ---
+        function adicionarItem() {
+            const nome = document.getElementById('inputNome').value.trim();
+            const categoria = document.getElementById('inputCategoria').value;
+            const preco = parseFloat(document.getElementById('inputPreco').value);
+            const qtd = parseInt(document.getElementById('inputQtd').value);
+
+            if (!nome || isNaN(preco) || preco <= 0 || isNaN(qtd) || qtd <= 0) {
+                alert("Por favor, preencha o nome, um preço válido e uma quantidade maior que zero.");
+                return;
+            }
+
+            // Verifica se o item já existe (mesmo nome e mesma categoria) para incrementar
+            const itemExistente = itens.find(item => item.nome.toLowerCase() === nome.toLowerCase() && item.categoria === categoria);
+
+            if (itemExistente) {
+                itemExistente.qtd += qtd;
+                // Opcional: atualizar o preço caso tenha mudado, ou manter o original. Vamos manter o original ou atualizar? Vamos atualizar para o mais recente.
+                itemExistente.preco = preco; 
+            } else {
+                itens.push({
+                    id: Date.now(),
+                    nome: nome,
+                    categoria: categoria,
+                    preco: preco,
+                    qtd: qtd
+                });
+            }
+
+            salvarERenderizar();
+            limparFormulario();
+        }
+
+        function alterarQuantidade(id, delta) {
+            const item = itens.find(i => i.id === id);
+            if (item) {
+                item.qtd += delta;
+                if (item.qtd <= 0) {
+                    if(confirm(`Remover "${item.nome}" da conta?`)) {
+                        itens = itens.filter(i => i.id !== id);
+                    } else {
+                        item.qtd = 1; // Reseta para 1 se o usuário cancelar a exclusão
+                    }
+                }
+                salvarERenderizar();
+            }
+        }
+
+        function removerItem(id) {
+            if(confirm("Tem certeza que deseja remover este item?")) {
+                itens = itens.filter(i => i.id !== id);
+                salvarERenderizar();
+            }
+        }
+
+        function limparTudo() {
+            if(itens.length === 0) return;
+            if(confirm("ATENÇÃO: Isso apagará TODA a conta atual. Deseja continuar?")) {
+                itens = [];
+                salvarERenderizar();
+            }
+        }
+
+        function salvarERenderizar() {
+            localStorage.setItem('consumoItens', JSON.stringify(itens));
+            renderizarTabela();
+            atualizarTotalizadores();
+            atualizarGrafico();
+        }
+
+        // --- RENDERIZAÇÃO DA UI ---
+        function renderizarTabela() {
+            const tbody = document.getElementById('tabelaConsumo');
+            const msgVazia = document.getElementById('mensagemVazia');
+            const contadorUnicos = document.getElementById('contadorItensUnicos');
+
+            tbody.innerHTML = '';
+            contadorUnicos.textContent = `${itens.length} item(ns) único(ns)`;
+
+            if (itens.length === 0) {
+                msgVazia.classList.remove('hidden');
+                return;
+            } else {
+                msgVazia.classList.add('hidden');
+            }
+
+            itens.forEach(item => {
+                const subtotal = item.preco * item.qtd;
+                const corCategoria = item.categoria === 'bebida' 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-orange-100 text-orange-700';
+                const iconeCategoria = item.categoria === 'bebida' ? 'fa-wine-glass' : 'fa-utensils';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition fade-in';
+                tr.innerHTML = `
+                    <td class="p-4 font-medium text-gray-800">${item.nome}</td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold capitalize ${corCategoria}">
+                            <i class="fas ${iconeCategoria} mr-1"></i> ${item.categoria}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right text-gray-600">${formatarMoeda(item.preco)}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center space-x-2">
+                            <button onclick="alterarQuantidade(${item.id}, -1)" class="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center justify-center text-xs font-bold transition">-</button>
+                            <span class="font-bold w-4 text-center">${item.qtd}</span>
+                            <button onclick="alterarQuantidade(${item.id}, 1)" class="w-6 h-6 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 flex items-center justify-center text-xs font-bold transition">+</button>
+                        </div>
+                    </td>
+                    <td class="p-4 text-right font-bold text-gray-800">${formatarMoeda(subtotal)}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="removerItem(${item.id})" class="text-red-400 hover:text-red-600 transition p-2" title="Remover item">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function atualizarTotalizadores() {
+            let totalQtd = 0;
+            let totalValor = 0;
+
+            itens.forEach(item => {
+                totalQtd += item.qtd;
+                totalValor += (item.preco * item.qtd);
+            });
+
+            document.getElementById('totalQtd').textContent = totalQtd;
+            document.getElementById('totalValor').textContent = formatarMoeda(totalValor);
+            
+            const ticketMedio = totalQtd > 0 ? (totalValor / totalQtd) : 0;
+            document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
+        }
+
+        function atualizarGrafico() {
+            let valorComida = 0;
+            let valorBebida = 0;
+
+            itens.forEach(item => {
+                const subtotal = item.preco * item.qtd;
+                if (item.categoria === 'comida') {
+                    valorComida += subtotal;
+                } else {
+                    valorBebida += subtotal;
+                }
+            });
+
+            const ctx = document.getElementById('consumoChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Se não houver dados, mostra um gráfico vazio/cinza
+            const dados = (valorComida === 0 && valorBebida === 0) ? [1] : [valorComida, valorBebida];
+            const cores = (valorComida === 0 && valorBebida === 0) ? ['#e5e7eb'] : ['#f97316', '#3b82f6']; // Laranja (Comida), Azul (Bebida)
+            const labels = (valorComida === 0 && valorBebida === 0) ? ['Sem dados'] : ['Comidas', 'Bebidas'];
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dados,
+                        backgroundColor: cores,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12, family: "'Segoe UI', sans-serif" }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (valorComida === 0 && valorBebida === 0) return 'Adicione itens para ver o gráfico';
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += formatarMoeda(context.raw);
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%' // Deixa o gráfico mais fino e moderno
+                }
+            });
+        }
+
+        // --- UTILITÁRIOS ---
+        function ajustarQtdInput(valor) {
+            const input = document.getElementById('inputQtd');
+            let novaQtd = parseInt(input.value) + valor;
+            if (novaQtd < 1) novaQtd = 1;
+            input.value = novaQtd;
+        }
+
+        function limparFormulario() {
+            document.getElementById('inputNome').value = '';
+            document.getElementById('inputPreco').value = '';
+            document.getElementById('inputQtd').value = '1';
+            document.getElementById('inputNome').focus();
+        }
+
+        // --- INICIALIZAÇÃO ---
+        window.onload = function() {
+            salvarERenderizar();
+        };
+
+        // Permitir adicionar apertando Enter no formulário
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && (e.target.id === 'inputNome' || e.target.id === 'inputPreco' || e.target.id === 'inputQtd')) {
+                adicionarItem();
+            }
+        });
+    </script>
+
+<script>
+  // Registro do Service Worker para funcionalidade Offline/PWA
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(registration => {
+          console.log('Service Worker registrado com sucesso:', registration.scope);
+        })
+        .catch(error => {
+          console.log('Falha ao registrar o Service Worker:', error);
+        });
+    });
+  }
+</script>
+</body>
+</html>
