@@ -32,9 +32,18 @@
                 <h1 class="text-3xl font-bold text-indigo-700"><i class="fas fa-receipt mr-2"></i>Controle de Consumo</h1>
                 <p class="text-gray-500 text-sm mt-1">Gerencie pedidos, quantidades e visualize o fechamento.</p>
             </div>
-            <button onclick="limparTudo()" class="mt-4 md:mt-0 bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition text-sm font-semibold">
-                <i class="fas fa-trash-alt mr-1"></i> Zerar Conta
-            </button>
+            <div class="mt-4 md:mt-0 flex gap-2">
+                <button onclick="exportarDados()" class="bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition text-sm font-semibold">
+                    <i class="fas fa-download mr-1"></i> Exportar
+                </button>
+                <button onclick="document.getElementById('inputImportar').click()" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition text-sm font-semibold">
+                    <i class="fas fa-upload mr-1"></i> Importar
+                </button>
+                <input type="file" id="inputImportar" accept=".json" class="hidden" onchange="importarDados(event)">
+                <button onclick="limparTudo()" class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition text-sm font-semibold">
+                    <i class="fas fa-trash-alt mr-1"></i> Zerar Conta
+                </button>
+            </div>
         </header>
 
         <!-- Totalizadores -->
@@ -360,6 +369,54 @@
                     cutout: '70%' // Deixa o gráfico mais fino e moderno
                 }
             });
+        }
+
+        // --- EXPORTAR / IMPORTAR ---
+        function exportarDados() {
+            if (itens.length === 0) {
+                alert("Não há dados para exportar.");
+                return;
+            }
+            const dados = JSON.stringify(itens, null, 2);
+            const blob = new Blob([dados], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `consumo-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importarDados(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+                    if (!Array.isArray(dados)) {
+                        alert("Arquivo inválido: o formato esperado é um array de itens.");
+                        return;
+                    }
+                    for (const item of dados) {
+                        if (!item.nome || !item.categoria || typeof item.preco !== 'number' || typeof item.qtd !== 'number') {
+                            alert("Arquivo inválido: itens devem conter nome, categoria, preco e qtd.");
+                            return;
+                        }
+                        if (!item.id) item.id = Date.now() + Math.random();
+                    }
+                    itens = dados;
+                    salvarERenderizar();
+                    alert(`Dados importados com sucesso! ${itens.length} item(ns) carregado(s).`);
+                } catch {
+                    alert("Erro ao ler o arquivo. Verifique se é um JSON válido.");
+                }
+            };
+            reader.readAsText(arquivo);
+            event.target.value = '';
         }
 
         // --- UTILITÁRIOS ---
